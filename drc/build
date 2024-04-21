@@ -1,0 +1,21 @@
+#! /bin/sh
+echo "proc drc.pc parse=none"
+proc drc.pc parse=none
+
+echo "gcc -g -c drc.c -I$ORACLE_HOME/precomp/public"
+gcc -g -c drc.c -I$ORACLE_HOME/precomp/public -m64
+
+echo "lex drc.l"
+flex drc.l
+
+echo "yacc drc.y"
+bison drc.y
+
+echo "gcc -g -c drc.tab.c"
+gcc -g -c drc.tab.c -m64
+
+#echo "gcc -g -o drc drc.o drc.tab.o -ll -ly -L$ORACLE_HOME/lib/ -lclntsh `cat $ORACLE_HOME/lib/ldflags` `cat $ORACLE_HOME/lib/sysliblist` -R$ORACLE_HOME/lib -laio -lposix4 -lm -lthread"
+
+gcc -g -o drc drc.o drc.tab.o -ll -L$ORACLE_HOME/lib/ -lclntsh `cat $ORACLE_HOME/lib/sysliblist`
+
+rm *.c *.o
