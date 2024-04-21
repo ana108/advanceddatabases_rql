@@ -1,0 +1,21 @@
+#! /bin/sh
+
+echo "proc trc.pc"
+proc trc.pc parse=none
+
+echo "gcc -c trc.c -I$ORACLE_HOME/precomp/public -m64"
+gcc -c trc.c -I$ORACLE_HOME/precomp/public -m64
+
+echo "flex trc.l"
+flex trc.l 
+
+echo "bison trc.y"
+bison trc.y
+
+echo "gcc -c trc.tab.c -m64"
+gcc -c trc.tab.c -m64
+
+#echo "gcc -m64 -o trc trc.o trc.tab.o -ll -ly -L$ORACLE_HOME/lib/ -lclntsh `cat $ORACLE_HOME/lib/ldflags` `cat $ORACLE_HOME/lib/sysliblist`  -R$ORACLE_HOME/lib -laio -lposix4 -lm -lthread"
+gcc -m64 -o trc trc.o trc.tab.o -ll -L$ORACLE_HOME/lib/ -lclntsh `cat $ORACLE_HOME/lib/sysliblist`  -L$ORACLE_HOME/lib
+
+#rm *.o *.c
