@@ -11,10 +11,10 @@ def main():
     set_credentials(username, password)
     user_input = ""
     while True:
-        user_input += input("RQL> ")
+        user_input += " " + input("RQL> ")
         if ";" in user_input:
             # processes_input(user_input)
-            call_alg(user_input)
+            call_drc(user_input)
             user_input = ""
         if user_input == 'exit':
             break
@@ -26,14 +26,25 @@ def set_credentials(username, password):
         filetowrite.write(username + "\n" + password + "\n")
 
 def processes_input(user_str):
-    print user_str
+    # TODO this function will parse input and decide which function to call
+    call_drc(query_input)
+    call_alg(user_input)
+
+def call_drc(query_input):
+    file='query.txt' 
+    with open(file, 'w') as filetowrite:
+        filetowrite.write(query_input + "\n")
+    ps = subprocess.Popen(['./drc', 'query.txt'],stdin=subprocess.PIPE,stdout=subprocess.PIPE)
+    output = ps.communicate()[0]
+    start_idx = str(output).find('ALG> \n')
+    result_to_print = output[(start_idx+6):]
+    print result_to_print
 
 def call_alg(query_input):
     file='query.txt' 
     with open(file, 'w') as filetowrite:
         filetowrite.write(query_input + "\n")
-    query = 'project age (select sname = \'John\' (student));\r\n'
-    ps = subprocess.Popen(['./alg', 'query.txt'],stdin=subprocess.PIPE,stdout=subprocess.PIPE) #shell=True, subprocess.PIPE
+    ps = subprocess.Popen(['./alg', 'query.txt'],stdin=subprocess.PIPE,stdout=subprocess.PIPE)
     output = ps.communicate()[0]
     start_idx = str(output).find('ALG> \n')
     result_to_print = output[(start_idx+6):]
