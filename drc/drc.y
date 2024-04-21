@@ -132,7 +132,7 @@ variables   :   VARIABLE
 				{
 					$$ = variableList($1, NULL, NULL, $3, NULL);
 				} 
-			|	VARIABLE LEFT_PAR VARIABLE RIGHT_PAR                   /* variable (variable) µ¥ÁÐ±í */
+			|	VARIABLE LEFT_PAR VARIABLE RIGHT_PAR                   /* variable (variable) */
 				{
 					$$ = variableList($3, $1, NULL, NULL, NULL);
 				}	
@@ -395,21 +395,21 @@ Purpose:       To connect to oracle, start the parser
 ------------------------------------------------- */
 //extern int yy_flex_debug;
 
-int main()
+int main(int argc, char **argv)
 {
 
-  char   *password;	
-  char   user_id[MAXLENGTH];
+  char password[MAXLENGTH];
+  char user_id[MAXLENGTH];
 
-  system("clear");
-  printf("\n%s", "Welcome To Domain Calculus Interface!\n");
-  
-  printf("\nEnter user-name: ");
-  scanf("%s", user_id);
-  getchar();
- 
-password=getpass("Enter password: ");
-  //printf("%s,%s",user_id,*password);
+
+  char inFileName[] = "credentials.txt";
+
+  FILE *inFile;
+
+  /* open the input file */  
+  inFile = fopen(inFileName, "r");
+  fscanf(inFile, "%s %s", user_id, password);
+
   /* Connect to the database. */
   if (oracle_connect(user_id,password) != 0){
      printf("%s\n",user_id);
@@ -427,6 +427,8 @@ password=getpass("Enter password: ");
   fprintf(stdout, "\t+------------------------------------------------------------+\n\n");
   fprintf(stdout, "RQL> ");
   //yy_flex_debug = 1;
+  extern FILE* yyin;
+  yyin = fopen(argv[1], "r");
   yyparse();
   oracle_disconnect();
   //fprintf(yyout, "\nThank you for using Domain Relation Calculus interpreter!\n");
