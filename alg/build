@@ -31,7 +31,7 @@ echo "gcc -m64 -c alg.tab.c"
 gcc -m64 -c alg.tab.c
 
 echo "gcc -m64 -o alg alg.o alg.tab.o -L$ORACLE_HOME/lib/ -L/usr/bin/flex -L/usr/lib64/libfl.a -lclntsh -lfl -lm `cat $ORACLE_HOME/lib/sysliblist` -Wl,-rpath,$ORACLE_HOME/lib/"
-gcc -m64 -o alg alg.o alg.tab.o -L$ORACLE_HOME/lib/ -L/usr/bin/flex -L/usr/lib64/libfl.a -lclntsh -lfl -lm `cat $ORACLE_HOME/lib/sysliblist` -Wl,-rpath,$ORACLE_HOME/lib/
+gcc -m64 -o ../alg alg.o alg.tab.o -L$ORACLE_HOME/lib/ -L/usr/bin/flex -L/usr/lib64/libfl.a -lclntsh -lfl -lm `cat $ORACLE_HOME/lib/sysliblist` -Wl,-rpath,$ORACLE_HOME/lib/
 
 echo "rm *.c *.o"
 rm *.c *.o

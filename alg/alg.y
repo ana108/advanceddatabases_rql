@@ -1800,20 +1800,23 @@ Return Values:
   0             execution completed successfully
   1             error occurred
 ------------------------------------------------- */
-int main()
+int main(int argc, char **argv)
 {
   	
-  char   *password = NULL;	
+  //char   *password = NULL;	
+  char password[MAXLENGTH];
   char   user_id[MAXLENGTH];
   debug_mode = false;
   divideby_flag = 0;
 
-  system("clear");
-  printf("\nPlease enter SQLPlus username: ");
-  scanf("%s", user_id);
-  getchar();
+  char inFileName[] = "credentials.txt";
 
-  password=getpass("Please enter the password: ");
+  FILE *inFile;
+
+  /* open the input file */  
+  inFile = fopen(inFileName, "r");
+
+  fscanf(inFile, "%s %s", user_id, password);
   
   /* Connect to the database. */
   if (oracle_connect(user_id, password) != 0)
@@ -1821,20 +1824,22 @@ int main()
     exit(1);
   }
   system("clear");
- 
+  printf("argv[1] is");
+  printf(argv[1]);
   fprintf(stdout, "\n\t+------------------------------------------------------------+\n");
   fprintf(stdout, "\t|           Relational Algebra Interface to Oracle           |\n");
   fprintf(stdout, "\t|                  mengchi@scs.carleton.ca                   |\n");
   fprintf(stdout, "\t|                   For help, type 'help;'                   |\n");
   fprintf(stdout, "\t|                    To exit, type 'exit;'                   |\n");
   fprintf(stdout, "\t+------------------------------------------------------------+\n");
-
-  while(1){
+  //while(1){
     fprintf(stdout, "\nALG> ");
     YY_FLUSH_BUFFER;
     f_stmterror = 'N';
+    extern FILE* yyin;
+    yyin = fopen(argv[1], "r");
     yyparse();
-  }
+  //}
 
   oracle_disconnect();
   return 0;
