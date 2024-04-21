@@ -12,12 +12,11 @@ def main():
     user_input = ""
     while True:
         user_input += " " + input("RQL> ")
-        if ";" in user_input:
-            # processes_input(user_input)
-            call_drc(user_input)
-            user_input = ""
-        if user_input.strip() == 'exit':
+        if user_input.strip() == 'exit' or user_input.strip() == 'exit;':
             break
+        if ";" in user_input:
+            processes_input(user_input)
+            user_input = ""
 
 
 def set_credentials(username, password):
@@ -26,28 +25,27 @@ def set_credentials(username, password):
         filetowrite.write(username + "\n" + password + "\n")
 
 def processes_input(user_str):
-    # TODO this function will parse input and decide which function to call
-    call_drc(user_str)
-    call_alg(user_str)
+    first_char = user_str.strip()[0]
+    if first_char == '{':
+        first_word = user_str.strip()[1:].strip().split()[0]
+        if '.' in first_word: # it is TRC if its not a variable
+            call_exec(user_str, 'trc', 'The sql statement is : ')
+        else:
+            call_exec(user_str, 'drc', 'statement:')
+    else:
+        call_exec(user_str, 'alg', 'ALG> \n')
+        # it is either alg or sql
 
-def call_drc(query_input):
+def call_exec(query_input, type_of_exe, str_to_truncate_from):
     file='query.txt' 
     with open(file, 'w') as filetowrite:
         filetowrite.write(query_input + "\n")
-    ps = subprocess.Popen(['./drc', 'query.txt'],stdin=subprocess.PIPE,stdout=subprocess.PIPE)
+    executable_to_call = './' + type_of_exe
+    ps = subprocess.Popen([executable_to_call, 'query.txt'],stdin=subprocess.PIPE,stdout=subprocess.PIPE)
     output = ps.communicate()[0]
-    start_idx = str(output).find('ALG> \n')
-    result_to_print = output[(start_idx+6):]
-    print result_to_print
-
-def call_alg(query_input):
-    file='query.txt' 
-    with open(file, 'w') as filetowrite:
-        filetowrite.write(query_input + "\n")
-    ps = subprocess.Popen(['./alg', 'query.txt'],stdin=subprocess.PIPE,stdout=subprocess.PIPE)
-    output = ps.communicate()[0]
-    start_idx = str(output).find('ALG> \n')
-    result_to_print = output[(start_idx+6):]
+    start_idx = str(output).rfind(str_to_truncate_from)
+    end_idx = str(output).rfind('processed.')
+    result_to_print = output[(start_idx):end_idx]
     print result_to_print
 
 if __name__ == '__main__':
