@@ -1,0 +1,37 @@
+#! /bin/sh
+
+#**************************************************
+# Filename:   build
+# Author:     Jaret Funk
+# Student#:   194-6-02491
+# Course:     CS 470-001
+# Date:       19 April 1999
+
+# Maintenance:
+# //First Set
+# Maintainer: Mathieu Leblanc
+# Student#:   101092676
+# Course:     COMP4905A
+# Date:       07 December 2020
+#************************************************** 
+
+echo "proc alg.pc parse=none"
+proc alg.pc parse=none
+
+echo "gcc -m64 -c alg.c -I$ORACLE_HOME/precomp/public"
+gcc -m64 -c alg.c -I$ORACLE_HOME/precomp/public
+
+echo "flex alg.l"
+flex alg.l
+
+echo "bison alg.y"
+bison  alg.y
+
+echo "gcc -m64 -c alg.tab.c"
+gcc -m64 -c alg.tab.c
+
+echo "gcc -m64 -o alg alg.o alg.tab.o -L$ORACLE_HOME/lib/ -L/usr/bin/flex -L/usr/lib64/libfl.a -lclntsh -lfl -lm `cat $ORACLE_HOME/lib/sysliblist` -Wl,-rpath,$ORACLE_HOME/lib/"
+gcc -m64 -o alg alg.o alg.tab.o -L$ORACLE_HOME/lib/ -L/usr/bin/flex -L/usr/lib64/libfl.a -lclntsh -lfl -lm `cat $ORACLE_HOME/lib/sysliblist` -Wl,-rpath,$ORACLE_HOME/lib/
+
+echo "rm *.c *.o"
+rm *.c *.o
