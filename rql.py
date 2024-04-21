@@ -1,4 +1,5 @@
 import sys
+import subprocess
 
 def main():
     sys.ps1 = 'RQL'
@@ -7,18 +8,36 @@ def main():
     
     username = input("Please enter a valid SQLPlus username: ")
     password = input("Please enter a valid password: ")
+    set_credentials(username, password)
     user_input = ""
     while True:
         user_input += input("RQL> ")
         if ";" in user_input:
-            processes_input(user_input)
+            # processes_input(user_input)
+            call_alg(user_input)
             user_input = ""
         if user_input == 'exit':
             break
 
 
+def set_credentials(username, password):
+    file='credentials.txt' 
+    with open(file, 'w') as filetowrite:
+        filetowrite.write(username + "\n" + password + "\n")
+
 def processes_input(user_str):
     print user_str
+
+def call_alg(query_input):
+    file='query.txt' 
+    with open(file, 'w') as filetowrite:
+        filetowrite.write(query_input + "\n")
+    query = 'project age (select sname = \'John\' (student));\r\n'
+    ps = subprocess.Popen(['./alg', 'query.txt'],stdin=subprocess.PIPE,stdout=subprocess.PIPE) #shell=True, subprocess.PIPE
+    output = ps.communicate()[0]
+    start_idx = str(output).find('ALG> \n')
+    result_to_print = output[(start_idx+6):]
+    print result_to_print
 
 if __name__ == '__main__':
     main()
