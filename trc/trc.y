@@ -665,19 +665,21 @@ Purpose:
 	To connect to oracle, start the processr and disconnect from oracle
 	when done
 ------------------------------------------------------------------------ */
-int main()
+int main(int argc, char **argv)
 {
-  char   *password;	
+  char password[MAXLENGTH];
   char   user_id[MAXLENGTH];
 
-  system("clear\n");
   printf("%s", "Welcome To Tuple Calculus Interface!\n");
-  
-  printf("\nEnter user-name:");
-  scanf("%s", user_id);
-  getchar();
- 
-password=getpass("Enter password:");
+
+  char inFileName[] = "credentials.txt";
+
+  FILE *inFile;
+
+  /* open the input file */  
+  inFile = fopen(inFileName, "r");
+  fscanf(inFile, "%s %s", user_id, password);
+
   /*#printf("test");*/
    /*# printf("user_id:%s",user_id);*/
   /*#printf("password:%s",*password);*/
@@ -695,6 +697,8 @@ password=getpass("Enter password:");
   fprintf(stdout, "\t|              To exit, type 'exit;' or 'quit;'              |\n");
   fprintf(stdout, "\t+------------------------------------------------------------+\n\n");
   fprintf(stdout, "TRC>");
+  extern FILE* yyin;
+  yyin = fopen(argv[1], "r");
   yyparse();
   fprintf(stdout, "\nThank you for using Tuple Relation Calculus interpreter!\n");
   oracle_disconnect();
@@ -712,4 +716,3 @@ password=getpass("Enter password:");
   exist_flag=0;
   return 0;
 }
-

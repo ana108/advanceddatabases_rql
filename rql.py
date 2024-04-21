@@ -16,7 +16,7 @@ def main():
             # processes_input(user_input)
             call_drc(user_input)
             user_input = ""
-        if user_input == 'exit':
+        if user_input.strip() == 'exit':
             break
 
 
@@ -27,8 +27,8 @@ def set_credentials(username, password):
 
 def processes_input(user_str):
     # TODO this function will parse input and decide which function to call
-    call_drc(query_input)
-    call_alg(user_input)
+    call_drc(user_str)
+    call_alg(user_str)
 
 def call_drc(query_input):
     file='query.txt' 
