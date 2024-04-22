@@ -18,7 +18,7 @@ def main():
         if user_input.strip() == 'exit' or user_input.strip() == 'exit;':
             break
         if ";" in user_input:
-            processes_input(user_input.lower(), username, password)
+            processes_input(user_input, username, password)
             user_input = ""
 
 
@@ -46,7 +46,7 @@ def processes_input(user_str, username, password):
         else:
             call_exec(user_str, 'drc', 'statement:')
     else:
-        if 'select' in first_word and 'from ' in user_str:
+        if 'select' in first_word.lower() and 'from ' in user_str.lower():
             call_sqlplus(username, password, user_str)
         elif is_sql_terms(user_str):
             call_sqlplus(username, password, user_str)
@@ -66,6 +66,7 @@ def call_sqlplus(username, password, query_input):
     print output
 
 def call_exec(query_input, type_of_exe, str_to_truncate_from):
+    print("Executing", type_of_exe)
     file='query.txt' 
     with open(file, 'w') as filetowrite:
         filetowrite.write(query_input + "\n")
