@@ -48,7 +48,7 @@ def processes_input(user_str, username, password):
     else:
         if 'select' in first_word.lower() and 'from ' in user_str.lower():
             call_sqlplus(username, password, user_str)
-        elif is_sql_terms(user_str):
+        elif is_sql_terms(user_str.lower()):
             call_sqlplus(username, password, user_str)
         else:
             call_exec(user_str, 'alg', 'ALG> \n')

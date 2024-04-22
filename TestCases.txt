@@ -1,0 +1,27 @@
+Test Cases
+-----------
+DRC:
+
+{N,A |(exists S)(Student(S,N,A))};
+{A | (exists S, N)(Student(S, N, A) and N = 'John')}; -- failed
+{N |(exists S,A,C,M)(Student(S,N,A) and Grade(S,C,M))};
+
+TRC:
+{S.sname, S.age | S in Student};
+{S.sname|S in Student and (exists G in Grade)(S.s#=G.s#)};
+{S.sname | S in Student and (forall G in Grade) 
+			(S.s# != G.S#)};
+
+ALG:
+
+project sname, age (Student);
+T1 := Project sname (Student);
+T2 := Student njoin Grade;
+T3 := project sname (T1);
+T1 minus T3;
+
+SQL:
+select count(*) from dual;
+CREATE TABLE test_case_table (
+    column1 varchar2(100)
+);
